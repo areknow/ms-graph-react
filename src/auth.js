@@ -6,11 +6,11 @@ import { msalConfig, msalRequest } from "./config";
 import { getUser, getPresence } from "./graph";
 
 const msalClient = new PublicClientApplication(msalConfig);
+let account = null;
 
 export async function signIn() {
   try {
     const authResult = await msalClient.loginPopup(msalRequest);
-    console.log(authResult.account.username);
     sessionStorage.setItem(
       "msalAccount",
       JSON.stringify(authResult.account.username)
@@ -24,13 +24,13 @@ export async function signIn() {
 }
 
 export function signOut() {
-  const account = null;
+  account = null;
   sessionStorage.removeItem("graphUser");
   msalClient.logout();
 }
 
 export async function getToken() {
-  let account = JSON.parse(sessionStorage.getItem("msalAccount"));
+  account = JSON.parse(sessionStorage.getItem("msalAccount"));
   if (!account) {
     throw new Error(
       "User account missing from session. Please sign out and sign in again."
